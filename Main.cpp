@@ -1,7 +1,5 @@
 #include "Main.h"
 
-#include <fstream>
-#include <iostream>
 
 int main()
 {
@@ -17,17 +15,11 @@ int main()
 	
 	for (int j = ImageHeight; j>=0; j--)
 	{
+		std::cerr << "\rScanlines Remaining: " << j << std::endl;
 		for(int i = 0; i< ImageWidth; i++)
 		{
-			auto R = double(i) / (ImageWidth - 1);
-			auto G = double(j) / (ImageHeight - 1);
-			auto B = .25;
-
-			int IR = static_cast<int>(255.999 * R);
-			int IG = static_cast<int>(255.999 * G);
-			int IB = static_cast<int>(255.999 * B);
-
-			Outfile << IR << ' ' << IG << ' ' << IB << '\n';
+			Color PixelColor((double(i) / (ImageWidth - 1)), (double(j) / (ImageHeight - 1)), .95);
+			WriteColor(Outfile, PixelColor);
 		}
 	}
 	Outfile.close();
