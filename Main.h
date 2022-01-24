@@ -1,5 +1,7 @@
 #include <cmath>
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include <fstream>
 
 using std::sqrt;
@@ -105,3 +107,25 @@ void WriteColor(std::ostream &out, Color PixelColor)
 		<< static_cast<int>(255.999 * PixelColor.y()) << ' '
 		<< static_cast<int>(255.999 * PixelColor.z()) << '\n';
 }
+
+ double Distance(Vec3 A, Vec3 B)
+{
+	return sqrt(((B.x() - A.x()) * (B.x() - A.x())) + ((B.y() - A.y()) * (B.y() - A.y())));
+}
+
+class Seed
+{
+	public:
+		Seed(Vec3 Loc)
+		{
+			Location = Loc;
+			srand((unsigned)time(0));
+			Color = Vec3((rand() % 10) * .1, (rand() % 10) * .1, (rand() % 10) * .1);
+		}
+	
+	public:
+		Vec3 Location;
+		Vec3 Color;
+	
+
+};
