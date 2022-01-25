@@ -1,2 +1,3 @@
 ﻿  Main.cpp
+D:\Dev\Projects\VoronoiTracer\Main.cpp(58,23): warning C4018: '<': signed/unsigned mismatch
   VoronoiTracer.vcxproj -> D:\Dev\Projects\VoronoiTracer\Debug\VoronoiTracer.exe
