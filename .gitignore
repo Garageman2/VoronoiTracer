@@ -36,3 +36,14 @@
 *.idb
 *.ipch
 *.db-wal
+Voronoi/.BridgeSort
+.vs/VoronoiTracer/v16/.suo
+.vs/VoronoiTracer/v16/Browse.VC.db
+*.db-shm
+*.ipch
+*.db
+.vs/VoronoiTracer/v16/.suo
+*.idb
+*.pdb
+*.ilk
+*.log

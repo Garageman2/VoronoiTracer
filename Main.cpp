@@ -28,6 +28,12 @@ int main()
 	std::vector<Seed> Seeds;
 	Seeds.reserve(SeedCount);
 
+	//use do while to print once, then check if valid and print again in function/
+	std::cout << "Enter 0 for Euclidian and 1 for Manhattan" << std::endl;
+	bool DistType = false;
+	std::cin >> DistType;
+	//false for Euclidian, True for Manhattan
+	double(*DistFormula)(Vec3, Vec3){ (DistType) ? &ManDistance : &EucDistance };
 
 	for (int i = 0; i < SeedCount; i++)
 	{
@@ -52,13 +58,13 @@ int main()
 			Vec3 PixLoc = Vec3(i, j, 0);
 			Seed NearestSeed = Seeds[0];
 			Color PixCol = NearestSeed.Color;
-			double Dist = ManDistance(PixLoc, Seeds[0].Location);
+			double Dist = (*DistFormula)(PixLoc, Seeds[0].Location);
 			if(Seeds.size()>1)
 			{
 				for (int i = 1; i < Seeds.size()-1; i++)
 				{
 					Seed value = Seeds[i];
-					double TDist = ManDistance(PixLoc, value.Location);
+					double TDist = (*DistFormula)(PixLoc, value.Location);
 					if(TDist < Radius && Radius !=0)
 					{
 						std::cout << "Match" << std::endl;
