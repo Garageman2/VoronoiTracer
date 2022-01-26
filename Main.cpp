@@ -52,13 +52,13 @@ int main()
 			Vec3 PixLoc = Vec3(i, j, 0);
 			Seed NearestSeed = Seeds[0];
 			Color PixCol = NearestSeed.Color;
-			double Dist = Distance(PixLoc, Seeds[0].Location);
+			double Dist = ManDistance(PixLoc, Seeds[0].Location);
 			if(Seeds.size()>1)
 			{
 				for (int i = 1; i < Seeds.size()-1; i++)
 				{
 					Seed value = Seeds[i];
-					double TDist = Distance(PixLoc, value.Location);
+					double TDist = ManDistance(PixLoc, value.Location);
 					if(TDist < Radius && Radius !=0)
 					{
 						std::cout << "Match" << std::endl;

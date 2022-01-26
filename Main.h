@@ -116,6 +116,11 @@ void WriteColor(std::ostream &out, Color PixelColor)
 	return sqrt(((B.x() - A.x()) * (B.x() - A.x())) + ((B.y() - A.y()) * (B.y() - A.y())));
 }
 
+double ManDistance(Vec3 A, Vec3 B)
+{
+	return(abs(B.x() - A.x()) + abs(B.y() - A.y()));
+}
+
 class Seed
 {
 	public:
