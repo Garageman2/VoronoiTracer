@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
+#include <string>
 
 using std::sqrt;
 
@@ -144,4 +145,23 @@ T Clamp(T Value, T Min, T Max)
 	if (Min > Value) { return Min; }
 	if (Max < Value) { return Max; }
 	return Value;
+}
+
+template <typename T>
+void ValidInput(std::string Printout, T &Input)
+{
+	for (;;)
+	{
+		std::cout << Printout << std::endl;
+		if(std::cin>>Input)
+		{
+			break;
+		}
+		else
+		{
+			std::cout << "Please enter a valid value!" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+	}
 }
