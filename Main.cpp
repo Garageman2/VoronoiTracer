@@ -1,4 +1,6 @@
 #include "Main.h"
+
+#include <algorithm>
 #include <vector>
 
 int main()
@@ -14,35 +16,31 @@ int main()
 	int SeedCount;
 	int Radius;
 	int ShadeDist;
-
-
-	//include guards so that seeds cannot be the same or out of bounds and there must be at least 1. Darken based on distance.
 	
-	std::cout << "How many seeds?" << std::endl;
-	std::cin >> SeedCount;
+
+	ValidInput("How Many Seeds?", SeedCount);
 	SeedCount = Clamp(SeedCount, 2, 100);
-	std::cout << "How big should the Seeds be drawn? Enter 0 to hide them" << std::endl;
-	std::cin >> Radius;
+	
+	ValidInput("How big should the Seeds be drawn? Enter 0 to hide them", Radius);
 	Radius = Clamp(Radius, 0, ImageHeight);
-	ShadeDist = ImageWidth;
+	
+	ShadeDist = ImageWidth * 1.25;
 	std::vector<Seed> Seeds;
 	Seeds.reserve(SeedCount);
 
-	//use do while to print once, then check if valid and print again in function/
-	std::cout << "Enter 0 for Euclidian and 1 for Manhattan" << std::endl;
-	bool DistType = false;
-	std::cin >> DistType;
-	//false for Euclidian, True for Manhattan
+	std::vector<int> PointDistances;
+	PointDistances.reserve(SeedCount);
+
+	bool DistType;
+	ValidInput("Enter 0 for Euclidian and 1 for Manhattan", DistType);
 	double(*DistFormula)(Vec3, Vec3){ (DistType) ? &ManDistance : &EucDistance };
 
 	for (int i = 0; i < SeedCount; i++)
 	{
 		int X;
 		int Y;
-		std::cout << "Enter an X Location for Seed " << i << std::endl;
-		std::cin >> X;
-		std::cout << "Enter a Y Location for Seed " << i << std::endl;
-		std::cin >> Y;
+		ValidInput(std::string("Enter an X Location for Seed ").append(std::to_string(i).c_str()), X);
+		ValidInput(std::string("Enter a Y Location for Seed ").append(std::to_string(i).c_str()), Y);
 		Seeds.push_back(Seed(Vec3(Clamp(X,0,ImageWidth), Clamp(Y,0,ImageHeight), 1.0)));
 	}
 
@@ -52,22 +50,26 @@ int main()
 	
 	for (int j = ImageHeight; j>=0; j--)
 	{
-		//std::cerr << "\rScanlines Remaining: " << j << std::endl;
+		
 		for(int i = 0; i< ImageWidth; i++)
 		{
 			Vec3 PixLoc = Vec3(i, j, 0);
 			Seed NearestSeed = Seeds[0];
 			Color PixCol = NearestSeed.Color;
 			double Dist = (*DistFormula)(PixLoc, Seeds[0].Location);
+			PointDistances.push_back(int(Dist));
+			
 			if(Seeds.size()>1)
 			{
 				for (int i = 1; i < Seeds.size()-1; i++)
 				{
+
 					Seed value = Seeds[i];
 					double TDist = (*DistFormula)(PixLoc, value.Location);
+					PointDistances.push_back(int(TDist));
+					
 					if(TDist < Radius && Radius !=0)
 					{
-						std::cout << "Match" << std::endl;
 						PixCol = Vec3(0, 0, 0);
 						break;
 					}
@@ -76,11 +78,14 @@ int main()
 						Dist = TDist;
 						NearestSeed = value;
 						PixCol = value.Color;
-						//std::cerr << "Dist" << TDist << std::endl;
 						PixCol = PixCol * Clamp(1-(TDist / ShadeDist), .1, 1.0);
-						//std::cerr << "Color New" << PixCol << std::endl;
 					}
 				}
+
+				std::sort(PointDistances.begin(),PointDistances.end());
+				if (PointDistances.at(1) - PointDistances.at(0) < 2) { PixCol = Vec3(0, 0, 0); }
+				PointDistances.clear();
+				
 			}
 			
 			WriteColor(Outfile, PixCol);
