@@ -1,13 +1,10 @@
 #include "Main.h"
-
 #include <algorithm>
 #include <vector>
 
 int main()
 {
-	//setup
-	const int ImageWidth = 1024;
-	const int ImageHeight = 1024;
+
 
 	std::ofstream Outfile;
 	Outfile.open("Image.ppm", std::ios::out);
@@ -35,12 +32,17 @@ int main()
 	ValidInput("Enter 0 for Euclidian and 1 for Manhattan", DistType);
 	double(*DistFormula)(Vec3, Vec3){ (DistType) ? &ManDistance : &EucDistance };
 
+	bool Random;
+	ValidInput("Enter 0 for Manual Seed Locations and 1 for Random distances", Random);
+	void(*LocationInput)(int &, int &, const int &) { (Random) ? &RandomSeeds : &ManualSeeds };
+	
 	for (int i = 0; i < SeedCount; i++)
 	{
 		int X;
 		int Y;
-		ValidInput(std::string("Enter an X Location for Seed ").append(std::to_string(i).c_str()), X);
-		ValidInput(std::string("Enter a Y Location for Seed ").append(std::to_string(i).c_str()), Y);
+		
+		LocationInput(X, Y, i);
+		
 		Seeds.push_back(Seed(Vec3(Clamp(X,0,ImageWidth), Clamp(Y,0,ImageHeight), 1.0)));
 	}
 
