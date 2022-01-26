@@ -1,4 +1,6 @@
 #include "Main.h"
+
+#include <algorithm>
 #include <vector>
 
 int main()
@@ -14,9 +16,6 @@ int main()
 	int SeedCount;
 	int Radius;
 	int ShadeDist;
-
-
-	//include guards so that seeds cannot be the same or out of bounds and there must be at least 1. Darken based on distance.
 	
 
 	ValidInput("How Many Seeds?", SeedCount);
@@ -28,6 +27,9 @@ int main()
 	ShadeDist = ImageWidth * 1.25;
 	std::vector<Seed> Seeds;
 	Seeds.reserve(SeedCount);
+
+	std::vector<int> PointDistances;
+	PointDistances.reserve(SeedCount);
 
 	bool DistType;
 	ValidInput("Enter 0 for Euclidian and 1 for Manhattan", DistType);
@@ -55,12 +57,17 @@ int main()
 			Seed NearestSeed = Seeds[0];
 			Color PixCol = NearestSeed.Color;
 			double Dist = (*DistFormula)(PixLoc, Seeds[0].Location);
+			PointDistances.push_back(int(Dist));
+			
 			if(Seeds.size()>1)
 			{
 				for (int i = 1; i < Seeds.size()-1; i++)
 				{
+
 					Seed value = Seeds[i];
 					double TDist = (*DistFormula)(PixLoc, value.Location);
+					PointDistances.push_back(int(TDist));
+					
 					if(TDist < Radius && Radius !=0)
 					{
 						PixCol = Vec3(0, 0, 0);
@@ -74,6 +81,11 @@ int main()
 						PixCol = PixCol * Clamp(1-(TDist / ShadeDist), .1, 1.0);
 					}
 				}
+
+				std::sort(PointDistances.begin(),PointDistances.end());
+				if (PointDistances.at(1) - PointDistances.at(0) < 2) { PixCol = Vec3(0, 0, 0); }
+				PointDistances.clear();
+				
 			}
 			
 			WriteColor(Outfile, PixCol);

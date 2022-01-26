@@ -122,6 +122,7 @@ double ManDistance(Vec3 A, Vec3 B)
 	return(abs(B.x() - A.x()) + abs(B.y() - A.y()));
 }
 
+
 class Seed
 {
 	public:
@@ -165,3 +166,4 @@ void ValidInput(std::string Printout, T &Input)
 		}
 	}
 }
+
