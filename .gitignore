@@ -47,3 +47,6 @@ Voronoi/.BridgeSort
 *.pdb
 *.ilk
 *.log
+.vs/VoronoiTracer/v16/.suo
+.vs/VoronoiTracer/v16/Browse.VC.db
+*.ipch
