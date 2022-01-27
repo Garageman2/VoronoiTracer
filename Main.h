@@ -8,8 +8,8 @@
 using std::sqrt;
 
 //setup
-int ImageWidth = 1024;
-int ImageHeight = 1024;
+int ImageWidth = 256;
+int ImageHeight = 256;
 
 std::default_random_engine Rd(time(0));
 
@@ -187,6 +187,4 @@ void RandomSeeds(int &X, int &Y, const int &i)
 
 	X = Clamp(PosDistro(Rd),0.0,(double)ImageWidth);
 	Y = Clamp(PosDistro(Rd), 0.0, (double)ImageHeight);
-	std::cerr << X << std::endl;
-	std::cerr << Y << std::endl;
 }
