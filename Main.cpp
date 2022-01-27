@@ -1,13 +1,10 @@
 #include "Main.h"
-
 #include <algorithm>
 #include <vector>
 
 int main()
 {
-	//setup
-	const int ImageWidth = 1024;
-	const int ImageHeight = 1024;
+
 
 	std::ofstream Outfile;
 	Outfile.open("Image.ppm", std::ios::out);
@@ -20,6 +17,9 @@ int main()
 
 	ValidInput("How Many Seeds?", SeedCount);
 	SeedCount = Clamp(SeedCount, 2, 100);
+
+	ValidInput(std::string("What size should the output be in pixels?"), ImageHeight);
+	ImageWidth = ImageHeight;
 	
 	ValidInput("How big should the Seeds be drawn? Enter 0 to hide them", Radius);
 	Radius = Clamp(Radius, 0, ImageHeight);
@@ -29,18 +29,23 @@ int main()
 	Seeds.reserve(SeedCount);
 
 	std::vector<int> PointDistances;
-	PointDistances.reserve(SeedCount);
+	PointDistances.reserve(SeedCount+1);
 
 	bool DistType;
 	ValidInput("Enter 0 for Euclidian and 1 for Manhattan", DistType);
 	double(*DistFormula)(Vec3, Vec3){ (DistType) ? &ManDistance : &EucDistance };
 
+	bool Random;
+	ValidInput("Enter 0 for Manual Seed Locations and 1 for Random distances", Random);
+	void(*LocationInput)(int &, int &, const int &) { (Random) ? &RandomSeeds : &ManualSeeds };
+	
 	for (int i = 0; i < SeedCount; i++)
 	{
 		int X;
 		int Y;
-		ValidInput(std::string("Enter an X Location for Seed ").append(std::to_string(i).c_str()), X);
-		ValidInput(std::string("Enter a Y Location for Seed ").append(std::to_string(i).c_str()), Y);
+		
+		LocationInput(X, Y, i);
+		
 		Seeds.push_back(Seed(Vec3(Clamp(X,0,ImageWidth), Clamp(Y,0,ImageHeight), 1.0)));
 	}
 
@@ -57,11 +62,10 @@ int main()
 			Seed NearestSeed = Seeds[0];
 			Color PixCol = NearestSeed.Color;
 			double Dist = (*DistFormula)(PixLoc, Seeds[0].Location);
-			PointDistances.push_back(int(Dist));
 			
 			if(Seeds.size()>1)
 			{
-				for (int i = 1; i < Seeds.size()-1; i++)
+				for (int i = 0; i < Seeds.size(); i++)
 				{
 
 					Seed value = Seeds[i];
@@ -81,11 +85,13 @@ int main()
 						PixCol = PixCol * Clamp(1-(TDist / ShadeDist), .1, 1.0);
 					}
 				}
-
-				std::sort(PointDistances.begin(),PointDistances.end());
-				if (PointDistances.at(1) - PointDistances.at(0) < 2) { PixCol = Vec3(0, 0, 0); }
+				if (PointDistances.size() > 1)
+				{
+					std::sort(PointDistances.begin(), PointDistances.end());
+					if ((PointDistances.at(1) - PointDistances.at(0)) <= 1) { PixCol = Vec3(1.0, 1.0, 0); }
+				}
 				PointDistances.clear();
-				
+				PointDistances.reserve(SeedCount);
 			}
 			
 			WriteColor(Outfile, PixCol);

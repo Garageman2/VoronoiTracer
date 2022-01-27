@@ -1,3 +1,15 @@
 ﻿  Main.cpp
-D:\Dev\Projects\VoronoiTracer\Main.cpp(58,23): warning C4018: '<': signed/unsigned mismatch
+D:\Dev\Projects\VoronoiTracer\Main.h(14,35): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Dev\Projects\VoronoiTracer\Main.h(188,11): warning C4244: '=': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=double
+          ]
+D:\Dev\Projects\VoronoiTracer\Main.h(189,11): warning C4244: '=': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=double
+          ]
+D:\Dev\Projects\VoronoiTracer\Main.cpp(27,25): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Dev\Projects\VoronoiTracer\Main.cpp(68,23): warning C4018: '<': signed/unsigned mismatch
   VoronoiTracer.vcxproj -> D:\Dev\Projects\VoronoiTracer\Debug\VoronoiTracer.exe

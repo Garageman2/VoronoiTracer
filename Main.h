@@ -1,11 +1,17 @@
 #include <cmath>
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
 #include <fstream>
 #include <string>
+#include <ctime>
+#include <random>
 
 using std::sqrt;
+
+//setup
+int ImageWidth = 256;
+int ImageHeight = 256;
+
+std::default_random_engine Rd(time(0));
 
 class  Vec3
 {
@@ -129,8 +135,9 @@ class Seed
 		Seed(Vec3 Loc)
 		{
 			Location = Loc;
-			srand((unsigned)time(0));
-			Color = Vec3((rand() % 10) * .1, (rand() % 10) * .1, (rand() % 10) * .1);
+			std::uniform_real_distribution<double> LocDistro(0, 100);
+			
+			Color = Vec3(LocDistro(Rd)/100, LocDistro(Rd) / 100, LocDistro(Rd) / 100);
 		}
 	
 	public:
@@ -167,3 +174,17 @@ void ValidInput(std::string Printout, T &Input)
 	}
 }
 
+void ManualSeeds(int &X, int &Y, const int &i)
+{
+	ValidInput(std::string("Enter an X Location for Seed ").append(std::to_string(i).c_str()), X);
+	ValidInput(std::string("Enter a Y Location for Seed ").append(std::to_string(i).c_str()), Y);
+}
+
+void RandomSeeds(int &X, int &Y, const int &i)
+{
+
+	std::uniform_real_distribution<double> PosDistro(0, ImageHeight);
+
+	X = Clamp(PosDistro(Rd),0.0,(double)ImageWidth);
+	Y = Clamp(PosDistro(Rd), 0.0, (double)ImageHeight);
+}
